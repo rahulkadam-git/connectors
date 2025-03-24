@@ -33,7 +33,7 @@ export const providers = [
   },
   {
     icon: "",
-    name: "Google Drive",
+    name: "google_drive",
   },
   {
     icon: "",

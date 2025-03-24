@@ -2,14 +2,24 @@ import React, { useState } from "react";
 import { connectorFormFields } from "../../utils/connectors";
 import Toast from "../../Component/Toast/Toast";
 
-export default function FinalData({ collectedData }) {
+export default function FinalData({ collectedData, action }) {
   const [showToast, setShowToast] = useState(false);
+  console.log(collectedData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    connectorFormFields.push(collectedData);
-    
+
+    if (action === "create") {
+      connectorFormFields.push(collectedData);
+    }
+    if (action === "update") {
+      const foundIndex = connectorFormFields.findIndex(
+        (x) => x.id === collectedData.id
+      );
+
+      connectorFormFields[foundIndex] = collectedData;
+    }
+
     setShowToast(true);
 
     setTimeout(() => {
@@ -26,7 +36,12 @@ export default function FinalData({ collectedData }) {
         Submit
       </button>
 
-      {showToast && <Toast message="Data added successfully!" onClose={() => setShowToast(false)} />}
+      {showToast && (
+        <Toast
+          message="Data added successfully!"
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 }

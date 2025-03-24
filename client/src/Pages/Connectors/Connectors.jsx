@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Add from "../../../public/create.svg";
 import searchImage from "../../../public/search.svg";
 import { connectorFormFields } from "../../utils/connectors";
@@ -6,7 +6,30 @@ import connectorImage from "../../../public/connector-image.jpg";
 import { Link } from "react-router-dom";
 
 export default function Connectors() {
-  console.log(connectorFormFields);
+  const [selectType, setSelectedType] = useState("");
+  const [showConnectors, setShowConnectors] = useState([]);
+
+  useEffect(() => {
+    setShowConnectors(connectorFormFields);
+  }, []);
+
+  const selectedType = (type) => {
+    setSelectedType(type);
+    const availableConnectors = connectorFormFields.filter(
+      (x) => x.type === type
+    );
+
+    setShowConnectors(availableConnectors);
+  };
+
+  const handleSearch = (e, value) => {
+    e.preventDefault();
+    const availableConnectors = connectorFormFields.filter((x) =>
+      x.name.toLowerCase().includes(value.toLowerCase())
+    );
+    
+    setShowConnectors(availableConnectors);
+  };
   return (
     <div className="w-full h-full  flex flex-wrap">
       {/* LEFT */}
@@ -35,21 +58,20 @@ export default function Connectors() {
           </div>
           <ul className="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow-sm sm:flex dark:divide-gray-700 dark:text-gray-400">
             <li className="w-full focus-within:z-10">
-              <a
-                href="#"
+              <button
                 className="inline-block w-full p-4 text-gray-900 bg-gray-100 border-r border-gray-200 dark:border-gray-700 rounded-s-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none dark:bg-gray-700 dark:text-white"
-                aria-current="page"
+                onClick={() => selectedType("source")}
               >
                 Sources
-              </a>
+              </button>
             </li>
             <li className="w-full focus-within:z-10">
-              <a
-                href="#"
+              <button
                 className="inline-block w-full p-4 bg-white border-s-0 border-gray-200 dark:border-gray-700 rounded-e-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                onClick={() => selectedType("destination")}
               >
                 Destination
-              </a>
+              </button>
             </li>
           </ul>
         </div>
@@ -64,13 +86,14 @@ export default function Connectors() {
                 id="email-address-icon"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search sources"
+                onChange={(e) => handleSearch(e, e.target.value)}
               />
             </div>
           </form>
         </div>
 
         <div className="">
-          {connectorFormFields.length === 0 ? (
+          {showConnectors.length === 0 ? (
             <>
               <img src={connectorImage} alt="" />
               <p className="text-center font-bold">
@@ -79,7 +102,7 @@ export default function Connectors() {
             </>
           ) : (
             <div className="">
-              {connectorFormFields.map((connector, index) => (
+              {showConnectors.map((connector, index) => (
                 <Link to={`/update/${connector.id}`}>
                   {" "}
                   <div

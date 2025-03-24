@@ -73,8 +73,8 @@ export default function CreateConnector() {
 
   const handleFormSubmit = (data) => {
     const finalData = {
-      ...collectedData, 
-      ...data, 
+      ...collectedData,
+      ...data,
     };
     console.log("Final Data:", finalData);
   };
@@ -84,6 +84,9 @@ export default function CreateConnector() {
     handleServiceChange,
     setName,
     setType,
+    type,
+    name,
+    selectedService,
   };
 
   return (
@@ -94,7 +97,6 @@ export default function CreateConnector() {
       <div className="w-[70%] m-auto">
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(handleFormSubmit)}>
-           
             {currentStep > 0 && (
               <div className="bg-gray-100 p-4 rounded mt-4">
                 <h3 className="text-lg font-bold">Collected Data</h3>
@@ -116,7 +118,7 @@ export default function CreateConnector() {
 
             <div>
               {currentStep >= schema.length + 1 && (
-                <FinalData collectedData={collectedData} />
+                <FinalData collectedData={collectedData} action="create" />
               )}
             </div>
 
